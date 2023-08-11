@@ -29,4 +29,3 @@ print(se_c)
 
 cum_prob <- 1 - pnorm( (0 - ccoeff) / se_c)
 
-#UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
