@@ -1,4 +1,4 @@
-closing_price <- read.table("C:/Users/Lex/Desktop/R.test.txt", sep = ",")
+closing_price <- read.table(file.path(getwd(), "R.test.txt"), sep = ",")
 close1 <- as.matrix(closing_price[, 1:9])
 close2 <- as.matrix(closing_price[, 2:10])
 # Grabs stock closing price and locates the data I want to focus on.

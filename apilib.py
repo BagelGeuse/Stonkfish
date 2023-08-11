@@ -47,12 +47,12 @@ def compileForRScript(ticker):
     closingPrices = "".join(closingPrices)+","
 
     #write it to the input file for the R script
-    with open("R/R.test.txt", "w+") as f:
+    with open("R.test.txt", "w+") as f:
         f.truncate()
         f.write(closingPrices)
     
     #Run the r script
-    os.system("Rscript R/main.r")
+    os.system("Rscript Stonkphish_Script.R")
 
 def storeResult(ticker):
 
@@ -62,7 +62,7 @@ def storeResult(ticker):
     with open("stockData.json", "r") as f:
         stockData = json.loads(f.read())
 
-    with open("R/result.txt", "r") as f:
+    with open("result.txt", "r") as f:
         percentage = f.read()
 
     tenDayPrices = [report["close"] for report in stockData["apiData"][ticker]]
