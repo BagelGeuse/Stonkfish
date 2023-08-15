@@ -5,6 +5,7 @@ import time
 import timesToRequest
 import sys
 import sched
+import subprocess
 
 eastern = pytz.timezone("US/Eastern")
 iterator = 0
@@ -45,6 +46,9 @@ def executeSchedule(i):
     dayTime = timesToRequest.times[newI]
     nextTime =  getNextTime(newI)
 
+    
+
+
     if(timesToRequest.times[newI] < timesToRequest.times[i]):
         nextTime += 86400
         #the get next time fn doesnt account for changes in the day
@@ -55,6 +59,9 @@ def executeSchedule(i):
     s.enterabs(nextTime, 10, lambda: executeSchedule(newI))
     s.run()
 
+def test():
+    print(subprocess.check_output("python apilib.py getTickerFromID 0", shell=True))
+
 # print(getNextTime(int(sys.argv[1])))
 
 if(sys.argv[1] == "start"):
@@ -62,3 +69,7 @@ if(sys.argv[1] == "start"):
 
 if(sys.argv[1] == "get"):
     print(timesToRequest.times2.index(int(sys.argv[2])))
+
+
+if(sys.argv[1] == "test"):
+    test()

@@ -11,6 +11,10 @@ def getTickerID(ticker):
         stockData = json.loads(f.read())
         return stockData["tickers"].index(ticker)
 
+def getTickerFromID(id):
+    with open("./stockData.json") as f:
+        parsedData = json.loads(f.read())
+        return parsedData["tickers"][id]
 
 def getStockData(ticker):
     #Open the stockdata file
@@ -92,7 +96,9 @@ def displayStock(ticker):
 
 #allow for console debugging
 if(__name__ == "__main__"):
-    if(sys.argv[1] == "getTickerID"):
+    if(sys.argv[1] == "getTickerFromID"):
+        print(getTickerFromID(int(sys.argv[2])))
+    if(sys.argv[1] == "getIDFromTicker"):
         print(getTickerID(sys.argv[2]))
     if(sys.argv[1] == "getStockData"):
         getStockData(sys.argv[2])
