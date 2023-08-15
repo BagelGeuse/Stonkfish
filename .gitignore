@@ -1,3 +1,4 @@
 .env
 __pycache__
 stockData.json
+.Rhistory
