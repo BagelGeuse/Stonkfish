@@ -28,39 +28,47 @@ def getNextTime(iterator):
 
     return nextInterval
 
-def printupdate():
-    print("Run")
+def updateStockData(i):
+    ticker = subprocess.check_output(f"python apilib.py getTickerFromID {i}", shell=True)[:-1].decode("ascii")
+    print(f"Ticker {ticker}")
+    
+    if(ticker == "None"):
+        return "No Ticker"
+    
+    response = subprocess.check_output(f"python apilib.py getStockData {ticker}", shell=True)[:-1].decode("ascii")
+    print(f"    Data fetch: {'Failure' if response == 'Error' else 'Success'}")
+    
+    if(response == "Error"):
+        return "API Error"
+
+    subprocess.check_output(f"python apilib.py compileR {ticker}", shell=True)
+    subprocess.check_output(f"python apilib.py storeResult {ticker}", shell=True)
+    print(f"    Compiled and saved data")
+
+    return "Success"
 
 def executeSchedule(i):
 
     print("--------------------------------------------------")
-    print(f"Execute happened at unix time {time.time()}")
-    print(f"Execute happened at EST Date {datetime.datetime.fromtimestamp(time.time(), eastern).strftime('%Y-%m-%d %H:%M:%S')}")
-
+    print(f"Execute happened at {time.time()}; {datetime.datetime.fromtimestamp(time.time(), eastern).strftime('%Y-%m-%d %H:%M:%S')}")
     print("--------------------------------------------------")
     print(f"Times List Index: {i}")
 
-    newI = (i+1)%192
+    updateStockData(i)
 
+    newI = (i+1)%192
     
     dayTime = timesToRequest.times[newI]
     nextTime =  getNextTime(newI)
-
-    
-
 
     if(timesToRequest.times[newI] < timesToRequest.times[i]):
         nextTime += 86400
         #the get next time fn doesnt account for changes in the day
 
-    print(f"Waiting for EST day unix time: {dayTime}")
-    print(f"Waiting for GMT unix time: {nextTime} ({type(nextTime)})")
-    print(f"Waiting for EST Date: {datetime.datetime.fromtimestamp(nextTime, eastern).strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Waiting for dayTime {dayTime}; unixtime {nextTime}; {datetime.datetime.fromtimestamp(nextTime, eastern).strftime('%Y-%m-%d %H:%M:%S')}")
     s.enterabs(nextTime, 10, lambda: executeSchedule(newI))
     s.run()
 
-def test():
-    print(subprocess.check_output("python apilib.py getTickerFromID 0", shell=True))
 
 # print(getNextTime(int(sys.argv[1])))
 
@@ -70,6 +78,5 @@ if(sys.argv[1] == "start"):
 if(sys.argv[1] == "get"):
     print(timesToRequest.times2.index(int(sys.argv[2])))
 
-
 if(sys.argv[1] == "test"):
-    test()
+    print(test())

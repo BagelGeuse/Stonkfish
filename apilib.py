@@ -9,12 +9,21 @@ def getTickerID(ticker):
 
     with open("./stockData.json", "r") as f:
         stockData = json.loads(f.read())
-        return stockData["tickers"].index(ticker)
-
+        try:
+            return stockData["tickers"].index(ticker)
+        except:
+            return "None"
+            
 def getTickerFromID(id):
     with open("./stockData.json") as f:
         parsedData = json.loads(f.read())
-        return parsedData["tickers"][id]
+        returndata = None
+        try:
+            returndata = parsedData["tickers"][id]
+        except:
+            returndata = "None"
+
+        return returndata
 
 def getStockData(ticker):
     #Open the stockdata file
@@ -24,13 +33,18 @@ def getStockData(ticker):
         #lookup the ticker symbol in the json file and get the stock data for that ticker symbol
         newData = sr.requestHistory(ticker) 
 
+        if(newData == "Error"):
+            print("Error")
+            return
+        # try:
         #slice off the first 490 elements and store it in the file
         stockData["apiData"][ticker] = newData[490:]
-
+        # except:
     #write the new data to the file
     with open("./stockData.json", "w") as f:
         f.truncate()
         f.write(json.dumps(stockData))
+        print("success")
 
 def compileForRScript(ticker):
     #All of the closing prices
