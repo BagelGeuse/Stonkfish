@@ -57,6 +57,9 @@ def executeSchedule(i):
     updateStockData(i)
 
     newI = (i+1)%192
+
+    if(i == 0):
+        response = subprocess.check_output(f"cp stockData.json website/stockData.json", shell=True)[-1].decode("ascii")
     
     dayTime = timesToRequest.times[newI]
     nextTime =  getNextTime(newI)
