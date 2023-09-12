@@ -55,11 +55,14 @@ def executeSchedule(i):
     print(f"Times List Index: {i}")
 
     updateStockData(i)
-
     newI = (i+1)%192
 
     if(i == 0):
-        response = subprocess.check_output(f"cp stockData.json website/stockData.json", shell=True)[-1].decode("ascii")
+        subprocess.check_output(f"cp stockData.json website/stockData.js", shell=True)
+        with open("website/stockData.js", "r") as f:
+            stockData = f.read()
+        with open("website/stockData.js", "w") as f:
+            f.write(f"stockdata = {stockData}")
     
     dayTime = timesToRequest.times[newI]
     nextTime =  getNextTime(newI)
